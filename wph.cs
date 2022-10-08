@@ -29,16 +29,36 @@ namespace DANGserver
                 Console.WriteLine(req.UserAgent);
                 Console.WriteLine();
 				
-				string pageData = File.ReadAllText(@"website\index.sdang");
+				string pageData = "an error occured :(";
 				
 				if (File.Exists("website"+req.Url.AbsolutePath.Replace("/", @"\")+".sdang"))
 				{
 					Console.WriteLine("website"+req.Url.AbsolutePath.Replace("/", @"\")+".sdang");
 					pageData = File.ReadAllText("website"+req.Url.AbsolutePath.Replace("/", @"\")+".sdang");
-				}
-				else if (req.Url.AbsolutePath == "")
-				{
+
 					
+					string[] templist = pageData.Split(new string[] { "</sdang>" }, StringSplitOptions.None);
+					
+					// string[] templist = pageData.Split("</sdang>");
+					
+					int a=0;
+					foreach(string cont in templist)
+					{
+						if (cont.Contains("<sdang>"))
+						{
+							int pFrom = cont.IndexOf("<sdang>") + "<sdang>".Length;
+							int pTo = cont.Length;
+
+							string result = pageData.Substring(pFrom, pTo - pFrom);
+							Console.WriteLine();
+							Console.WriteLine("SDANG cont: "+result);
+						}
+						a++;
+					}
+				}
+				else if (req.Url.AbsolutePath == "" | req.Url.AbsolutePath == "/")
+				{
+					pageData = File.ReadAllText(@"website\index.sdang");
 				}
 				else
 				{
